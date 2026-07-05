@@ -7,6 +7,9 @@ x-gpu-defaults: &gpu-defaults
             count: 1
             capabilities: [gpu]
 
+x-jetson-gpu-defaults: &jetson-gpu-defaults
+  runtime: nvidia
+
 services:
   api:
     build:
@@ -41,9 +44,9 @@ services:
   manager_worker2:
     build:
       context: ./backend
-      dockerfile: Dockerfile.manager
+      dockerfile: Dockerfile.jetson
     container_name: model_manager_pc2
-    <<: *gpu-defaults
+    <<: *jetson-gpu-defaults
     ports:
       - "8002:8002"
     volumes:
