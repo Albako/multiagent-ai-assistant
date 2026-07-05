@@ -14,7 +14,7 @@ active_models = {}
 class LoadModelRequest(BaseModel):
     worker_id: str
     model_name: str
-    n_gpu_layers: int = -1
+    n_gpu_layers: int = -1 # Change this for your config. -1 = all the layers to the GPU; 0 = all the layers to the CPU; 15 = 15 layers to the GPU and the rest (if there is a rest) goes to the CPU 
     n_ctx: int = 8192
 
 class GenerateRequest(BaseModel):
