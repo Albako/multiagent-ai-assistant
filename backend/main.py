@@ -49,8 +49,8 @@ async def initialize_mode(request: InitModeRequest):
         fast_model = os.getenv("FAST_MODEL")
         if not fast_model:
             raise HTTPException(status_code=500, detail="Missing FAST_MODEL in .env")
-        await load_model_on_manager(PC1_MANAGER_URL, "worker1", fast_model)
-        return {"status": "success", "message": "Fast mode loaded on PC1"}
+        await load_model_on_manager(PC3_MANAGER_URL, "worker1", fast_model)
+        return {"status": "success", "message": "Fast mode loaded on PC3"}
 
     elif mode in ["pro", "coding"]:
         prefix = "PRO" if mode == "pro" else "CODING"
