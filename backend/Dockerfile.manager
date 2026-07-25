@@ -4,21 +4,23 @@ FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
-
 
 WORKDIR /app
 
 # install basic system dependencies required for potential runtime operations
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cuda-toolkit-12-4 \
-    python3 \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+    python3.11 \
+    python3.11-dev \
     python3-pip \
-    python3-venv
+    python3-venv \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
 
 # Copy only requirements first to leverage Docker layer caching
 COPY requirements.manager.txt .
