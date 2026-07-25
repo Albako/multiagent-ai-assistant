@@ -7,7 +7,7 @@ x-gpu-defaults: &gpu-defaults
             count: 1
             capabilities: [gpu]
 
-x-jetson-gpu-defaults: &jetson-gpu-defaults
+x-jeston-gpu-defaults: &jetson-gpu-defaults
   runtime: nvidia
   environment:
     - NVIDIA_VISIBLE_DEVICES=all
@@ -47,7 +47,7 @@ services:
   manager_worker2:
     build:
       context: ./backend
-      dockerfile: Dockerfile.jetson
+      dockerfile: Dockerfile.manager
     container_name: model_manager_pc2
     <<: *jetson-gpu-defaults
     ports:
@@ -59,6 +59,8 @@ services:
     environment:
       - MANAGER_PORT=8002
       - NODE_ROLE=worker2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
     restart: unless-stopped
     profiles: ["pc2"]
 
