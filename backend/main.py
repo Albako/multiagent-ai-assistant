@@ -136,7 +136,7 @@ async def chat_endpoint(request: ChatRequest):
         current_prompt = context_prompt
         final_answer = ""
 
-        elif request.mode in ["pro", "coding"]:
+    elif request.mode in ["pro", "coding"]:
         # Implements the Council Architecture: Generator -> Reviewer -> Unifier(Judge)
         print(f"--- Starting Council Pipeline for {request.mode} mode ---")
 
