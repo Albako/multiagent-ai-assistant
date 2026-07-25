@@ -130,12 +130,6 @@ async def chat_endpoint(request: ChatRequest):
         update_history_with_response(request.session_id, response)
         return {"final_response": response, "iterations": 0}
 
-    elif request.mode in ["pro"]:
-        print(f"---Starting Council Pipeline for {request.mode} mode ---")
-        
-        current_prompt = context_prompt
-        final_answer = ""
-
     elif request.mode in ["pro", "coding"]:
         # Implements the Council Architecture: Generator -> Reviewer -> Unifier(Judge)
         print(f"--- Starting Council Pipeline for {request.mode} mode ---")
@@ -158,19 +152,25 @@ async def chat_endpoint(request: ChatRequest):
         critique = await query_manager(NODE2_URL, "worker2", critique_prompt, temperature=0.2)
 
         # Step 3: Judge Synthesis
-        judge_system_prompt = f"""You are the Lead Judge and Synthesizer. 
+        coding_instruction = (
+            "You MUST respond ONLY with a valid JSON containing 'verdict', 'base_code', 'security_flags', 'performance_notes', 'summary'."
+            if request.mode == "coding"
+            else "Provide the final unified response, fixing the issues raised by the council."
+        )
+
+        judge_system_prompt = f"""You are the Lead Judge and Synthesizer.
         You are reviewing an initial response and feedback from an AI Council member.
         Your task is to produce the final, unified output incorporating valid feedback.
-        
+
         User Request: {request.message}
-        
+
         Initial Output (Worker 1):
         {base_generation}
-        
+
         Council Critique (Worker 2):
         {critique}
-        
-        {"You MUST respond ONLY with a valid JSON containing 'verdict', 'base_code', 'security_flags', 'performance_notes', 'summary'." if request.mode == "coding" else "Provide the final unified response, fixing the issues raised by the council."}
+
+        {coding_instruction}
         """
     
 
