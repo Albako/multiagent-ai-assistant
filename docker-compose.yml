@@ -9,6 +9,9 @@ x-gpu-defaults: &gpu-defaults
 
 x-jetson-gpu-defaults: &jetson-gpu-defaults
   runtime: nvidia
+  environment:
+    - NVIDIA_VISIBLE_DEVICES=all
+    - NVIDIA_DRIVER_CAPABILITIES=all
 
 services:
   api:
