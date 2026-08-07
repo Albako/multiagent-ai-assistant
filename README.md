@@ -11,7 +11,7 @@ Ai-Chat bot with Judge-Worker architecture. The project consists of backend + AP
 
 ## Back-end
 ### Starting the cluster
-In order to start the cluster use this command in the weakest PC (the one without GPU):
+In order to start the cluster use this command in the API host:
 ```bash
 ./start.sh pc0
 ```
@@ -23,7 +23,7 @@ and in the second PC:
 ```bash
 ./start.sh pc2
 ```
-and finally the third:
+and finally the third (the most powerful):
 ```bash
 ./start.sh pc3
 ```
