@@ -112,6 +112,8 @@ async def query_manager(url: str, worker_id: str, prompt: str, max_tokens: int =
                 f"{url}/api/v1/{worker_id}/generate",
                 json={"prompt": prompt, "max_tokens": max_tokens, "temperature": temperature}
             )
+            if response.status_code != 200:
+                print(f"Error from API: {response.text}")
             response.raise_for_status()
             data = response.json()
             return data["response"]["choices"][0]["text"].strip()
@@ -140,7 +142,7 @@ async def chat_endpoint(request: ChatRequest):
             if request.mode == "coding" else 
             "You are an expert assistant. Provide a comprehensive response to the user's request."
         )
-        base_generation = await query_manager(NODE1_URL, "worker1", f"{worker1_system_prompt}\n\n{context_prompt}", temperature=0.7)
+        base_generation = await query_manager(PC1_MANAGER_URL, "worker1", f"{worker1_system_prompt}\n\n{context_prompt}", temperature=0.7)
 
         # Step 2: Council Critique
         worker2_system_prompt = (
@@ -149,7 +151,7 @@ async def chat_endpoint(request: ChatRequest):
             "You are a critical reviewer. Analyze the following response for factual accuracy, logic, and clarity. Point out any flaws."
         )
         critique_prompt = f"{worker2_system_prompt}\n\nUser Request: {request.message}\n\nInitial Output:\n{base_generation}\n\nYour Critique:"
-        critique = await query_manager(NODE2_URL, "worker2", critique_prompt, temperature=0.2)
+        critique = await query_manager(PC2_MANAGER_URL, "worker2", critique_prompt, temperature=0.2)
 
         # Step 3: Judge Synthesis
         coding_instruction = (
