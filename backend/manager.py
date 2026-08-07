@@ -42,12 +42,15 @@ async def load_model(request: LoadModelRequest):
             model_path=model_path,
             n_gpu_layers=request.n_gpu_layers,
             n_ctx=request.n_ctx,
-            verbose=False
+            verbose=True
         )
         active_models[request.worker_id] = llm
         return {"status": "success", "message": f"Successfully loaded {request.model_name} for {request.worker_id}"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to load model: {str(e)}")
+        error_msg = f"Failed to load model: {str(e)}"
+        print(error_msg, flush=True)
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=error_msg)
 
 @app.post("/api/v1/{worker_id}/generate")
 async def generate_text(worker_id: str, request: GenerateRequest):
