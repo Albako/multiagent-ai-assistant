@@ -1,13 +1,11 @@
 # MultiAgent Chat-Bot
-Ai-Chat bot with Judge-Worker architecture. The project consists of backend + API, PWA app and mobile app.
 
-## Requirements
-1. Four PCs preferably with Linux or WSL2
-2. Each PCs have to be connected either to the same network or to the same VPN
-3. Three out of four having at least 32GB of RAM (less should also work, but it's not recommended) (exemptions are devices with unified memory +16GB)
-4. And each having at least one Nvidia GPU
-5. Three out of four PCs needs to have the CUDA drivers installed
-6. Three out of four PCs needs to have Docker
+## Hardware
+My project is hosted on 4 different hosts:
+1. PC0 API: My x86 server.
+2. PC1 Worker1: R9 7945HX 64GB 5200MT/s + RTX 4060 (mobile) 8GB GDDR6
+3. PC2 Worker2: Nvidia Jetson AGX Developer Kit 16GB LPDDR4x with MAXN mode enabled
+4. PC3 Judge: i7-14700KF 64GB 6400MT/s + RTX 4070 Ti 12GB GDDR6x
 
 ## Back-end
 ### Starting the cluster
@@ -31,8 +29,14 @@ and finally the third (the most powerful):
 Make sure to edit the IP adresses in the `.env` file.
 
 ### Testing
-You can test the connection between the PCs and if the models can be loaded by using this commans:
+Start by loading the models:
+
+Then test the connection:
 ```bash
-curl -X POST http://<PC2_IP>:8000/system/init_mode -H "Content-Type: application/json" -d '{"mode": "pro"}'
+curl -X POST "http://127.0.0.1:8000/chat" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "message": "Write a Python function to check if a number is prime and optimize its time complexity.",
+           "task_type": "coding"
+         }'
 ```
-If everything went according to plan, then you should receive the confirmation.
