@@ -1,5 +1,6 @@
 import os
 import gc
+import traceback
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from llama_cpp import Llama
