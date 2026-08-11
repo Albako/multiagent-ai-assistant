@@ -30,7 +30,13 @@ Make sure to edit the IP adresses in the `.env` file.
 
 ### Testing
 Start by loading the models:
-
+```bash
+curl -X POST "http://127.0.0.1:8000/system/init_mode" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "mode": "coding"
+         }'
+```
 Then test the connection:
 ```bash
 curl -X POST "http://127.0.0.1:8000/chat" \
