@@ -49,7 +49,7 @@ async def initialize_mode(request: InitModeRequest):
         fast_model = os.getenv("FAST_MODEL")
         if not fast_model:
             raise HTTPException(status_code=500, detail="Missing FAST_MODEL in .env")
-        await load_model_on_manager(PC3_MANAGER_URL, "worker1", fast_model)
+        await load_model_on_manager(PC3_MANAGER_URL, "judge", fast_model)
         return {"status": "success", "message": "Fast mode loaded on PC3"}
 
     elif mode in ["pro", "coding"]:
@@ -128,7 +128,7 @@ async def chat_endpoint(request: ChatRequest):
 
     if request.mode == "fast":
         # fast mode - bypass workers, go straight to PC1
-        response = await query_manager(PC1_MANAGER_URL, "worker1", context_prompt)
+        response = await query_manager(PC3_MANAGER_URL, "judge", context_prompt)
         update_history_with_response(request.session_id, response)
         return {"final_response": response, "iterations": 0}
 
